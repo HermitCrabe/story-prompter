@@ -1,0 +1,61 @@
+{
+  "Personal Traits": {
+    "Species": {
+      "label": "Species",
+      "placeholder": "e.g., Human, Canine, Feline, Dragon"
+    },
+    "Background": {
+      "label": "Background",
+      "placeholder": "Brief description of their character backstory",
+      "type": "textarea"
+    },
+    "Personality": {
+      "label": "Personality",
+      "placeholder": "Core personality traits and characteristics",
+      "type": "textarea"
+    },
+    "Occupation": {
+      "label": "Occupation",
+      "placeholder": "What they do for work or their role"
+    },
+    "Age": {
+      "label": "Age",
+      "placeholder": "Age or age range"
+    },
+    "Origin": {
+      "label": "Origin",
+      "placeholder": "Where they come from"
+    }
+  },
+  "Physical Traits": {
+    "Biological Gender": {
+      "label": "Biological Gender",
+      "placeholder": "e.g., Male, Female, Non-binary"
+    },
+    "Body Type": {
+      "label": "Body Type",
+      "placeholder": "e.g., Bipedal, Quadrupedal, Humanoid"
+    },
+    "Height": {
+      "label": "Height",
+      "placeholder": "Physical height description"
+    },
+    "Build": {
+      "label": "Build",
+      "placeholder": "e.g., Slim, Athletic, Stocky, Muscular"
+    },
+    "Fur/Skin Color": {
+      "label": "Fur/Skin Color",
+      "placeholder": "Primary color or pattern"
+    },
+    "Eye Color": {
+      "label": "Eye Color",
+      "placeholder": "Eye color description"
+    },
+    "Distinguishing Features": {
+      "label": "Distinguishing Features",
+      "placeholder": "Scars, markings, unique characteristics",
+      "type": "textarea"
+    }
+  }
+}

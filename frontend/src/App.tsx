@@ -1,17 +1,21 @@
 import './App.css'
-import StoryInput from './components/StoryInput'
+import TabContainer from './components/tabs/TabContainer'
+import StoryPrompterPage from './components/pages/StoryPrompterPage'
+import CharacterCreatorPage from './components/pages/CharacterCreatorPage'
 
 function App() {
-  const handleDebugPrint = (text: string) => {
-    console.log('Text input contents:', text)
-  }
+  const tabs = [
+    {
+      label: 'Story Prompter',
+      content: <StoryPrompterPage />
+    },
+    {
+      label: 'Character Creator',
+      content: <CharacterCreatorPage />
+    }
+  ]
 
-  return (
-    <>
-      <h1>Story Prompter</h1>
-      <StoryInput onDebugPrint={handleDebugPrint} />
-    </>
-  )
+  return <TabContainer tabs={tabs} />
 }
 
 export default App

@@ -5,7 +5,7 @@ import { useNavigation } from '../../contexts/NavigationContext'
 
 export default function SidebarContent() {
   const { expandSidebar, collapseSidebar } = useSidebar()
-  const { goToSettings, goToTabs, goToStoryLibrary, currentView } = useNavigation()
+  const { goToSettings, goToStoryPrompter, goToCharacterCreator, goToStoryLibrary, currentView } = useNavigation()
 
   const handleItemClick = (item: string) => {
     console.log(`Clicked: ${item}`)
@@ -21,8 +21,8 @@ export default function SidebarContent() {
             </svg>
           }
           label="Story Prompter"
-          onClick={goToTabs}
-          isActive={currentView === 'tabs'}
+          onClick={goToStoryPrompter}
+          isActive={currentView === 'story-prompter'}
         />
         
         <SidebarItem
@@ -32,8 +32,8 @@ export default function SidebarContent() {
             </svg>
           }
           label="Character Creator"
-          onClick={goToTabs}
-          isActive={currentView === 'tabs'}
+          onClick={goToCharacterCreator}
+          isActive={currentView === 'character-creator'}
         />
         
         <SidebarItem

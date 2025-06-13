@@ -12,7 +12,7 @@ export default function StoryInput({ onDebugPrint }: StoryInputProps) {
   const [response, setResponse] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState<string | undefined>()
-  const { settings, isConfigured } = useLLM()
+  const { isConfigured, streamLLMResponse } = useLLM()
 
   const handleDebugClick = () => {
     onDebugPrint(textInput)
@@ -34,28 +34,17 @@ export default function StoryInput({ onDebugPrint }: StoryInputProps) {
     setResponse('')
 
     try {
-      const llmService = new LLMService(settings)
-      const messages = [
-        { 
-          role: 'system', 
-          content: 'You are a creative storyteller. Generate engaging stories based on the user\'s prompt. Be descriptive and imaginative.' 
+      await streamLLMResponse(
+        'You are a creative storyteller. Generate engaging stories based on the user\'s prompt. Be descriptive and imaginative.',
+        textInput,
+        (chunk) => {
+          setResponse(prev => prev + chunk)
         },
-        { 
-          role: 'user', 
-          content: textInput 
-        }
-      ]
-
-      for await (const chunk of llmService.streamCompletion(messages)) {
-        if (chunk.error) {
-          setError(chunk.error)
-          break
-        }
-        setResponse(chunk.content)
-        if (chunk.isComplete) {
-          break
-        }
-      }
+        (error) => {
+          setError(error)
+        },
+        'Story Generation'
+      )
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error occurred')
     } finally {

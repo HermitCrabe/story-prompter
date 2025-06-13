@@ -1,22 +1,24 @@
 import { createContext, useContext, useState, type ReactNode } from 'react'
 
-type NavigationState = 'tabs' | 'settings' | 'story-library'
+type NavigationState = 'story-prompter' | 'character-creator' | 'settings' | 'story-library'
 
 interface NavigationContextType {
   currentView: NavigationState
   setCurrentView: (view: NavigationState) => void
   goToSettings: () => void
-  goToTabs: () => void
+  goToStoryPrompter: () => void
+  goToCharacterCreator: () => void
   goToStoryLibrary: () => void
 }
 
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined)
 
 export function NavigationProvider({ children }: { children: ReactNode }) {
-  const [currentView, setCurrentView] = useState<NavigationState>('tabs')
+  const [currentView, setCurrentView] = useState<NavigationState>('story-prompter')
 
   const goToSettings = () => setCurrentView('settings')
-  const goToTabs = () => setCurrentView('tabs')
+  const goToStoryPrompter = () => setCurrentView('story-prompter')
+  const goToCharacterCreator = () => setCurrentView('character-creator')
   const goToStoryLibrary = () => setCurrentView('story-library')
 
   return (
@@ -24,7 +26,8 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
       currentView, 
       setCurrentView, 
       goToSettings, 
-      goToTabs,
+      goToStoryPrompter,
+      goToCharacterCreator,
       goToStoryLibrary
     }}>
       {children}

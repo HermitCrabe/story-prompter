@@ -4,6 +4,7 @@ interface LLMSettings {
   model: string
   temperature: number
   maxTokens: number
+  useStructuredOutput: boolean
 }
 
 export interface StreamingResponse {
@@ -21,27 +22,48 @@ export class LLMService {
 
   async *streamCompletion(
     messages: Array<{ role: string; content: string }>,
-    onChunk?: (chunk: StreamingResponse) => void
+    onChunk?: (chunk: StreamingResponse) => void,
+    jsonSchema?: object
   ): AsyncGenerator<StreamingResponse, void, unknown> {
-    if (!this.settings.apiKey || !this.settings.baseUrl) {
-      yield { content: '', isComplete: true, error: 'LLM API not configured' }
+    if (!this.settings.baseUrl || !this.settings.model) {
+      yield { content: '', isComplete: true, error: 'LLM API not configured (missing Base URL or Model)' }
       return
     }
 
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+      
+      // Only add Authorization header if API key is provided
+      if (this.settings.apiKey?.trim()) {
+        headers['Authorization'] = `Bearer ${this.settings.apiKey}`
+      }
+
+      const requestBody: any = {
+        model: this.settings.model,
+        messages,
+        temperature: this.settings.temperature,
+        max_tokens: this.settings.maxTokens,
+        stream: true,
+      }
+
+      // Add structured output if enabled and schema provided
+      if (this.settings.useStructuredOutput && jsonSchema) {
+        requestBody.response_format = {
+          type: "json_schema",
+          json_schema: {
+            name: "structured_response",
+            schema: jsonSchema,
+            strict: true
+          }
+        }
+      }
+
       const response = await fetch(`${this.settings.baseUrl}/chat/completions`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.settings.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: this.settings.model,
-          messages,
-          temperature: this.settings.temperature,
-          max_tokens: this.settings.maxTokens,
-          stream: true,
-        }),
+        headers,
+        body: JSON.stringify(requestBody),
       })
 
       if (!response.ok) {

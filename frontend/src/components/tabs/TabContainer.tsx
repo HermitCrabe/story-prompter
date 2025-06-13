@@ -1,23 +1,12 @@
-import { TabGroup } from '@headlessui/react'
 import { type ReactNode, useEffect, useState } from 'react'
-import Header from '../layout/Header'
-import MainContent from '../layout/MainContent'
 import Sidebar from '../sidebar/Sidebar'
 import StorageWarning from '../ui/StorageWarning'
 import SettingsPage from '../pages/SettingsPage'
 import StoryLibraryPage from '../pages/StoryLibraryPage'
+import StoryPrompterPage from '../pages/StoryPrompterPage'
+import CharacterCreatorPage from '../pages/CharacterCreatorPage'
 import { useSidebar } from '../../contexts/SidebarContext'
 import { useNavigation } from '../../contexts/NavigationContext'
-
-interface TabData {
-  label: string
-  content: ReactNode
-}
-
-interface TabContainerProps {
-  tabs: TabData[]
-  defaultIndex?: number
-}
 
 function useWindowWidth() {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024)
@@ -34,7 +23,7 @@ function useWindowWidth() {
   return windowWidth
 }
 
-export default function TabContainer({ tabs, defaultIndex = 0 }: TabContainerProps) {
+export default function TabContainer() {
   const { isCollapsed } = useSidebar()
   const { currentView } = useNavigation()
   const windowWidth = useWindowWidth()
@@ -58,12 +47,15 @@ export default function TabContainer({ tabs, defaultIndex = 0 }: TabContainerPro
           <div className="flex-1 p-4">
             <StoryLibraryPage />
           </div>
-        ) : (
-          <TabGroup defaultIndex={defaultIndex}>
-            <Header tabs={tabs} />
-            <MainContent tabs={tabs} />
-          </TabGroup>
-        )}
+        ) : currentView === 'story-prompter' ? (
+          <div className="flex-1 p-4">
+            <StoryPrompterPage />
+          </div>
+        ) : currentView === 'character-creator' ? (
+          <div className="flex-1 p-4">
+            <CharacterCreatorPage />
+          </div>
+        ) : null}
       </div>
       
       <StorageWarning />

@@ -8,8 +8,9 @@ interface ModelData {
 }
 
 export default function LLMSettings() {
-  const { settings, updateSettings, isConfigured } = useLLM()
+  const { settings, prompts, updateSettings, updatePrompts, isConfigured } = useLLM()
   const [tempSettings, setTempSettings] = useState(settings)
+  const [tempPrompts, setTempPrompts] = useState(prompts)
   const [isTesting, setIsTesting] = useState(false)
   const [testResult, setTestResult] = useState<{ type: 'success' | 'error', message: string } | null>(null)
   const [availableModels, setAvailableModels] = useState<ModelData[]>([])
@@ -17,12 +18,18 @@ export default function LLMSettings() {
   const [showModelDropdown, setShowModelDropdown] = useState(false)
   const modelDropdownRef = useRef<HTMLDivElement>(null)
 
-  // Check if settings have been modified
-  const hasChanges = JSON.stringify(settings) !== JSON.stringify(tempSettings)
+  // Check if settings or prompts have been modified
+  const hasChanges = JSON.stringify(settings) !== JSON.stringify(tempSettings) || 
+                     JSON.stringify(prompts) !== JSON.stringify(tempPrompts)
   
   // Helper function to check if a specific field has been modified
   const isFieldModified = (field: keyof typeof settings) => {
     return settings[field] !== tempSettings[field]
+  }
+
+  // Helper function to check if a specific prompt has been modified
+  const isPromptModified = (field: keyof typeof prompts) => {
+    return prompts[field] !== tempPrompts[field]
   }
 
   // Helper function to get input classes based on modification state
@@ -32,6 +39,22 @@ export default function LLMSettings() {
       : 'bg-gray-700 border-gray-600'
     return `${baseClasses} ${modifiedClasses}`
   }
+
+  // Helper function to get prompt input classes based on modification state
+  const getPromptInputClasses = (field: keyof typeof prompts, baseClasses: string) => {
+    const modifiedClasses = isPromptModified(field) 
+      ? 'bg-blue-900/30 border-blue-500 ring-1 ring-blue-500/50' 
+      : 'bg-gray-700 border-gray-600'
+    return `${baseClasses} ${modifiedClasses}`
+  }
+
+  useEffect(() => {
+    setTempSettings(settings)
+  }, [settings])
+
+  useEffect(() => {
+    setTempPrompts(prompts)
+  }, [prompts])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -46,6 +69,7 @@ export default function LLMSettings() {
 
   const handleSave = () => {
     updateSettings(tempSettings)
+    updatePrompts(tempPrompts)
     setTestResult(null) // Clear test result when saving
   }
 
@@ -323,6 +347,35 @@ export default function LLMSettings() {
             className={getInputClasses('maxTokens', 'flex-1 p-2 border rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent')}
           />
         </div>
+
+        {/* Structured Output */}
+        <div className="flex items-center gap-4">
+          <div className="w-24 flex-shrink-0">
+            <label 
+              className="text-sm font-medium text-gray-200 cursor-help"
+              title="Enable structured JSON outputs with schema validation (OpenAI API compatible models only)"
+            >
+              Structured Output
+            </label>
+          </div>
+          <div className="flex-1 flex items-center gap-3">
+            <button
+              onClick={() => setTempSettings(prev => ({ ...prev, useStructuredOutput: !prev.useStructuredOutput }))}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 ${
+                tempSettings.useStructuredOutput ? 'bg-blue-600' : 'bg-gray-600'
+              } ${isFieldModified('useStructuredOutput') ? 'ring-1 ring-blue-500/50' : ''}`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  tempSettings.useStructuredOutput ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+            <span className="text-sm text-gray-300">
+              {tempSettings.useStructuredOutput ? 'Enabled' : 'Disabled'}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Test Result */}
@@ -349,8 +402,35 @@ export default function LLMSettings() {
         </div>
       )}
 
+      {/* Prompts Section */}
+      <div className="mt-8 pt-6 border-t border-gray-700">
+        <h3 className="text-lg font-semibold text-white mb-4">Prompt Templates</h3>
+        
+        {/* Outline Prompt */}
+        <div className="space-y-3">
+          <div>
+            <label 
+              className="block text-sm font-medium text-gray-200 mb-2 cursor-help"
+              title="Template for generating story outlines. Use {STORY_DESCRIPTION} as a placeholder for the user's story description."
+            >
+              Story Outline Prompt
+            </label>
+            <textarea
+              value={tempPrompts.outlinePrompt}
+              onChange={(e) => setTempPrompts(prev => ({ ...prev, outlinePrompt: e.target.value }))}
+              placeholder="Enter the prompt template for generating story outlines..."
+              rows={8}
+              className={getPromptInputClasses('outlinePrompt', 'w-full p-3 border rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm font-mono')}
+            />
+            <p className="text-xs text-gray-400 mt-1">
+              Use <code className="bg-gray-800 px-1 rounded">{"{STORY_DESCRIPTION}"}</code> as a placeholder for the user's story description.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Actions */}
-      <div className="flex justify-end mt-4 pt-4 border-t border-gray-700">
+      <div className="flex justify-end mt-6 pt-4 border-t border-gray-700">
         <div className="flex gap-2">
           <button
             onClick={handleTest}

@@ -6,7 +6,7 @@
     },
     "Background": {
       "label": "Background",
-      "placeholder": "Brief description of their character backstory",
+      "placeholder": "Description of the character's backstory",
       "type": "textarea"
     },
     "Personality": {
@@ -14,47 +14,48 @@
       "placeholder": "Core personality traits and characteristics",
       "type": "textarea"
     },
-    "Occupation": {
-      "label": "Occupation",
-      "placeholder": "What they do for work or their role"
-    },
     "Age": {
       "label": "Age",
       "placeholder": "Age or age range"
     },
-    "Origin": {
-      "label": "Origin",
-      "placeholder": "Where they come from"
+    "Gender Identity": {
+      "label": "Gender Identity",
+      "placeholder": "Gender identity the character identifies with"
     }
   },
   "Physical Traits": {
     "Biological Gender": {
       "label": "Biological Gender",
-      "placeholder": "e.g., Male, Female, Non-binary"
+      "placeholder": "e.g., Male, Female, Intersex"
     },
     "Body Type": {
       "label": "Body Type",
-      "placeholder": "e.g., Bipedal, Quadrupedal, Humanoid"
+      "placeholder": "e.g., Bipedal, Quadrupedal, Avian, Serpentine"
     },
-    "Height": {
-      "label": "Height",
-      "placeholder": "Physical height description"
+    "Size": {
+      "label": "Size",
+      "placeholder": "Physical size and/or height"
     },
-    "Build": {
-      "label": "Build",
-      "placeholder": "e.g., Slim, Athletic, Stocky, Muscular"
+    "Body Shape": {
+      "label": "Body Shape",
+      "placeholder": "Description of the character's body shape - e.g., slender, muscular, wide hipped, etc.",
+      "type": "textarea"
+    },
+    "Fur/Skin Type": {
+      "label": "Fur/Skin Type",
+      "placeholder": "e.g., skin, fur, scales, feathers"
     },
     "Fur/Skin Color": {
       "label": "Fur/Skin Color",
       "placeholder": "Primary color or pattern"
     },
-    "Eye Color": {
-      "label": "Eye Color",
-      "placeholder": "Eye color description"
+    "Eyes": {
+      "label": "Eyes",
+      "placeholder": "Description of eye shape/color, or other features"
     },
-    "Distinguishing Features": {
-      "label": "Distinguishing Features",
-      "placeholder": "Scars, markings, unique characteristics",
+    "Sexual Organs": {
+      "label": "Sexual Organs",
+      "placeholder": "Descriptions of each relevant sexual organ",
       "type": "textarea"
     }
   }

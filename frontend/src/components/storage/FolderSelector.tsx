@@ -101,9 +101,7 @@ export default function FolderSelector({ onFolderChange }: FolderSelectorProps) 
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-      <h3 className="text-white font-medium mb-3">Local File Storage</h3>
-      
+    <div>
       {error && (
         <div className="bg-red-900/20 border border-red-700 rounded-lg p-3 mb-4">
           <p className="text-red-300 text-sm">{error}</p>
@@ -111,30 +109,23 @@ export default function FolderSelector({ onFolderChange }: FolderSelectorProps) 
       )}
       
       {!hasFolder ? (
-        <div>
-          <p className="text-gray-300 text-sm mb-4">
-            Select a folder on your computer to save characters and stories as actual files.
-            This allows unlimited storage and easy backup/sharing.
-          </p>
-          <button
-            onClick={handleSelectFolder}
-            disabled={isSelecting}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-          >
-            {isSelecting ? 'Selecting...' : 'Select Storage Folder'}
-          </button>
-        </div>
+        <button
+          onClick={handleSelectFolder}
+          disabled={isSelecting}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+        >
+          {isSelecting ? 'Selecting...' : 'Select Storage Folder'}
+        </button>
       ) : (
-        <div>
-          <div className="flex items-start mb-4">
-            <svg className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <svg className="w-5 h-5 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
             <div>
-              <p className="text-green-400 text-sm font-medium">✅ Storage folder selected</p>
-              <p className="text-gray-300 text-sm font-medium">{folderName}</p>
-              <p className="text-gray-400 text-xs mt-1">
-                Characters are being saved as files in: {folderName}/characters/
+              <p className="text-white text-sm font-medium">{folderName}</p>
+              <p className="text-gray-400 text-xs">
+                Saving to: {folderName}/characters/
               </p>
             </div>
           </div>
@@ -145,7 +136,7 @@ export default function FolderSelector({ onFolderChange }: FolderSelectorProps) 
               disabled={isSelecting}
               className="px-3 py-1.5 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white text-sm rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
             >
-              Change Folder
+              Change
             </button>
             <button
               onClick={handleClearFolder}

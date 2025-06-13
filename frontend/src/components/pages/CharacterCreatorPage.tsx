@@ -1,22 +1,22 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { type CharacterData } from '../../types/character'
 import { type HybridCharacter } from '../../utils/hybridCharacterStorage'
 import { saveCharacter, exportCharacterToFile, importCharacterFromFile } from '../../utils/hybridCharacterStorage'
 import CharacterForm from '../character/CharacterForm'
 import CharacterSelector from '../character/CharacterSelector'
-import FolderSelector from '../storage/FolderSelector'
+import { useStorage } from '../../contexts/StorageContext'
 
 export default function CharacterCreatorPage() {
   const [character, setCharacter] = useState<CharacterData | null>(null)
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>()
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
-  const [hasStorageFolder, setHasStorageFolder] = useState(false)
+  const { hasStorageFolder } = useStorage()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleCharacterChange = (newCharacter: CharacterData) => {
+  const handleCharacterChange = useCallback((newCharacter: CharacterData) => {
     setCharacter(newCharacter)
     setSaveStatus('idle')
-  }
+  }, [])
 
   const handleCharacterSelect = (selectedCharacter: HybridCharacter | null) => {
     if (selectedCharacter) {
@@ -138,11 +138,6 @@ export default function CharacterCreatorPage() {
             {getSaveButtonText()}
           </button>
         </div>
-      </div>
-
-      {/* Storage Folder Selector */}
-      <div className="mb-6">
-        <FolderSelector onFolderChange={setHasStorageFolder} />
       </div>
 
       {/* Character Selector */}

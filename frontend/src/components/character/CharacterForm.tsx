@@ -7,13 +7,11 @@ interface CharacterFormProps {
 }
 
 export default function CharacterForm({ onCharacterChange, initialCharacter }: CharacterFormProps) {
-  const [character, setCharacter] = useState<CharacterData>(
-    initialCharacter || {
-      Name: '',
-      "Personal Traits": {},
-      "Physical Traits": {}
-    }
-  )
+  const [character, setCharacter] = useState<CharacterData>({
+    Name: '',
+    "Personal Traits": {},
+    "Physical Traits": {}
+  })
   
   const [config, setConfig] = useState<CharacterConfig | null>(null)
   const [loading, setLoading] = useState(true)
@@ -25,18 +23,19 @@ export default function CharacterForm({ onCharacterChange, initialCharacter }: C
         const configData = await response.json()
         setConfig(configData)
         
-        // Initialize character with empty values for all configured traits
-        setCharacter(prev => ({
-          ...prev,
+        const defaultCharacter = {
+          Name: initialCharacter?.Name || '',
           "Personal Traits": Object.keys(configData["Personal Traits"]).reduce((acc, key) => {
-            acc[key] = ''
+            acc[key] = initialCharacter?.["Personal Traits"]?.[key] || ''
             return acc
           }, {} as Record<string, string>),
           "Physical Traits": Object.keys(configData["Physical Traits"]).reduce((acc, key) => {
-            acc[key] = ''
+            acc[key] = initialCharacter?.["Physical Traits"]?.[key] || ''
             return acc
           }, {} as Record<string, string>)
-        }))
+        }
+        
+        setCharacter(defaultCharacter)
       } catch (error) {
         console.error('Failed to load character configuration:', error)
       } finally {
@@ -45,30 +44,24 @@ export default function CharacterForm({ onCharacterChange, initialCharacter }: C
     }
 
     loadConfig()
-  }, [])
-
-  useEffect(() => {
-    if (initialCharacter) {
-      setCharacter(initialCharacter)
-    }
   }, [initialCharacter])
 
-  useEffect(() => {
-    onCharacterChange(character)
-  }, [character])
-
   const handleNameChange = (value: string) => {
-    setCharacter(prev => ({ ...prev, Name: value }))
+    const updatedCharacter = { ...character, Name: value }
+    setCharacter(updatedCharacter)
+    onCharacterChange(updatedCharacter)
   }
 
   const handleTraitChange = (category: 'Personal Traits' | 'Physical Traits', trait: string, value: string) => {
-    setCharacter(prev => ({
-      ...prev,
+    const updatedCharacter = {
+      ...character,
       [category]: {
-        ...prev[category],
+        ...character[category],
         [trait]: value
       }
-    }))
+    }
+    setCharacter(updatedCharacter)
+    onCharacterChange(updatedCharacter)
   }
 
   if (loading || !config) {
